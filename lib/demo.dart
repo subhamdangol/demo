@@ -10,7 +10,7 @@ class demopageState extends State<demopage>{
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text("Hello to flutter"),
+      child: Text("Hello to flutter. this is a app"),
     );
   }
 
