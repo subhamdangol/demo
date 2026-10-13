@@ -1,3 +1,4 @@
+import 'package:demo/pages/detailpage.dart';
 import 'package:flutter/material.dart';
 
 class Dashboard extends StatefulWidget {
@@ -11,6 +12,14 @@ class _DashboardState extends State<Dashboard> {
 
   horizontalitem(size, String title, url, date){
     return GestureDetector(
+      onTap: (){
+        Navigator.of(context).push(
+          MaterialPageRoute<void>(
+              builder: (context) => detailpage()
+          ),
+        );
+
+      },
       child: Stack(
         children: [
           Container(
