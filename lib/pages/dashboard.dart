@@ -5,10 +5,10 @@ class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
 
   @override
-  State<Dashboard> createState() => _DashboardState();
+  State<Dashboard> createState() => DashboardState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class DashboardState extends State<Dashboard> {
 
   horizontalitem(size, String title, url, date){
     return GestureDetector(
@@ -57,7 +57,7 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  verticalitem(size, String title, url, date,source){
+  static verticalitem(size, String title, url, date,source){
     return Container(
       margin: EdgeInsets.all(15),
       child: Row(
@@ -146,8 +146,8 @@ class _DashboardState extends State<Dashboard> {
                     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxF7q_hWWmaRtboKkoTHfhz9sKncOA5ilmhRwnO9jlJg&s=10%22",
                     "02,Feb 2026"),
                 horizontalitem(size,
-                    "I am Batman",
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxF7q_hWWmaRtboKkoTHfhz9sKncOA5ilmhRwnO9jlJg&s=10%22",
+                    "Superman",
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0JYpiva56ry1TCj3XoZpVSisMm3chSzH0ArFQVwe_h7PTHRP6jxwvphec&s=10",
                     "02,Feb 2026"),
               ],
             ),
