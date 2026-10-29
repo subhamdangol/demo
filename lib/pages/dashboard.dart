@@ -1,6 +1,9 @@
 import 'package:demo/pages/detailpage.dart';
 import 'package:flutter/material.dart';
 
+import '../contoller/apicall.dart';
+import '../model/news.dart';
+
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
 
@@ -74,7 +77,7 @@ class DashboardState extends State<Dashboard> {
                 child: ClipRRect(
                   borderRadius: BorderRadiusGeometry.circular(20),
                   child: Image.network(
-                      fit: BoxFit.cover,url,
+                    fit: BoxFit.cover,url,
                   ),
                 ),
               ),
@@ -119,80 +122,85 @@ class DashboardState extends State<Dashboard> {
       ),
     );
   }
+  Future<news?>? futurenewsdata;
+  @override
+  void initState() {
+    super.initState();
+    futurenewsdata = Apicall.getnewsapidata();
+  }
+
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Dashboard"),
-        centerTitle: true,
-      ),
-      body: Container(
-      child:Column (
-        children: [
-          //horizontal list data
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                //horizontalitem(size, String title, url, date){
-                horizontalitem(size,
-                    "I am Batman",
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxF7q_hWWmaRtboKkoTHfhz9sKncOA5ilmhRwnO9jlJg&s=10%22",
-                    "02,Feb 2026"),
-                horizontalitem(size,
-                    "I am Vengence",
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxF7q_hWWmaRtboKkoTHfhz9sKncOA5ilmhRwnO9jlJg&s=10%22",
-                    "02,Feb 2026"),
-                horizontalitem(size,
-                    "Superman",
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0JYpiva56ry1TCj3XoZpVSisMm3chSzH0ArFQVwe_h7PTHRP6jxwvphec&s=10",
-                    "02,Feb 2026"),
+        appBar: AppBar(
+          title: Text("Dashboard"),
+          centerTitle: true,
+        ),
+        body: Container(
+            child:Column (
+              children:
+              [
+                FutureBuilder(future: futurenewsdata,builder: (context, AsyncSnapshot<news?>snapshot){
+                  switch (snapshot.connectionState){
+                    case ConnectionState.none:
+                    case ConnectionState.waiting:
+                      return Center(child:CircularProgressIndicator(),);
+                    case ConnectionState.active:
+                    case ConnectionState.done:
+                      if(snapshot.hasData){
+                        //ui
+                        var data = snapshot.data;
+                        return Column(
+                          children: [
+                            Container(
+                              height: size.height/4.5,
+                              child: ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount:  data!.articles!.length,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    return horizontalitem(size,
+                                        data.articles![index].title!,
+                                        data.articles![index].urlToImage,
+                                        data.articles![index].publishedAt);
+                                  }
+                              ),
+                            ),
+                            Container(
+                              height: size.height/1.65,
+                              child: ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: data.articles!.length,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    return verticalitem(size,
+                                        data.articles![index].title!,
+                                        data.articles![index].urlToImage,
+                                        data.articles![index].publishedAt!.split("T")[0],
+                                        data.articles![index].source!.name!
+                                    );
+                                  }
+                              ),
+                            ),
+
+                          ],
+                        );
+                      }else{
+                        return Center(child: Text("No Data"),);
+                      }
+                  }
+                }),
+
+
+
+
+
+
               ],
             ),
-          ),
-          //vertical list data
-
-          Container(
-            height: size.height/1.65,
-            child: SingleChildScrollView(
-
-              child: Column(
-                children: [
-                  verticalitem(size,
-                      "Me batman",
-                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxF7q_hWWmaRtboKkoTHfhz9sKncOA5ilmhRwnO9jlJg&s=10%22",
-                      "02,Feb 2026",
-                      "PCPS.com"),
-                  verticalitem(size,
-                      "I batman",
-                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxF7q_hWWmaRtboKkoTHfhz9sKncOA5ilmhRwnO9jlJg&s=10%22",
-                      "02,Feb 2026",
-                      "PCPS.com"),
-                  verticalitem(size,
-                      "Me batman",
-                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxF7q_hWWmaRtboKkoTHfhz9sKncOA5ilmhRwnO9jlJg&s=10%22",
-                      "02,Feb 2026",
-                      "PCPS.com"),
-                  verticalitem(size,
-                      "Me batman",
-                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxF7q_hWWmaRtboKkoTHfhz9sKncOA5ilmhRwnO9jlJg&s=10%22",
-                      "02,Feb 2026",
-                      "PCPS.com"),
-                  verticalitem(size,
-                      "Me batman",
-                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxF7q_hWWmaRtboKkoTHfhz9sKncOA5ilmhRwnO9jlJg&s=10%22",
-                      "02,Feb 2026",
-                      "PCPS.com"),
-
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
-    ),
+        ),
     );
   }
 }
